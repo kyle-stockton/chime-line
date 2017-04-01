@@ -3,39 +3,67 @@ from tkinter import *
 from tkinter import ttk
 
 root = Tk()
-task_arr = ['',['eat'],['drink',['liquor',['scotch'],['tequila']],['beer']],['be merry']]
-time_arr = [0,[1],[3,[2,[1],[1]],[1]],[3]]
-temp_task = ['']
-temp_time = [0]
+
+path = 'default.txt'
+task_in = ['',['eat'],['drink',['liquor',['scotch'],['tequila']],['beer']],['be merry']]
+time_in = [0,[1],[3,[2,[1],[1]],[1]],[3]]
+file = open(path,'r')
+task_read = eval(file.readline())
+print(task_read)
+time_read = eval(file.readline())
+print(time_read)
+file.close()
+task_out = ['']
+time_out = [0]
 lvl_arr = []
 parent_arr = ['']
 newitem_inc = 0
 
 def populate_tree():
-    d = task_arr
-    e = time_arr
+    task_temp = task_read
+    time_temp = time_read
     for i in lvl_arr:
-        d = d[i]
-        e = e[i]
-    for t in range(1,len(d)):
-        parent_arr.append(tree.insert(parent_arr[-1], 'end', text=d[t][0], values=(e[t][0])))
-        if len(d[t]) > 0:
+        task_temp = task_temp[i]
+        time_temp = time_temp[i]
+    for t in range(1,len(task_temp)):
+        parent_arr.append(tree.insert(parent_arr[-1], 'end', \
+            text=task_temp[t][0], values=(time_temp[t][0])))
+        if len(task_temp[t]) > 0:
             lvl_arr.append(t)
             populate_tree()
             lvl_arr.pop()
         parent_arr.pop()
+
+def save_tasklist():
+    update_arrays()
+    file = open(path,'w')
+    file.write(str(task_out) + "\n" + str(time_out))
+    file.close()
+    print(task_out)
+    print(time_out)
+
+def update_arrays():
+    task_temp = task_out
+    time_temp = time_out
+    for i in lvl_arr:
+        task_temp = task_temp[i]
+        time_temp = time_temp[i]
+    for c in tree.get_children(parent_arr[-1]):
+        task_temp.append([tree.item(c,'text')])
+        time_temp.append([int(tree.item(c,'values'[0])[0])])
+        if len(tree.get_children(c)) > 0:
+            parent_arr.append(c)
+            lvl_arr.append(tree.index(c)+1)
+            update_arrays()
+            lvl_arr.pop()
+            parent_arr.pop()
+    
 
 def append_tree():
     global newitem_inc
     id = tree.insert(tree.selection()[0], 'end', text="new item " + str(newitem_inc), values=(0))
     newitem_inc += 1
     tree.see(id)
-
-def update_arrays():
-    d = temp_task
-    e = temp_time
-
-    return 0
 
 content = ttk.Frame(root, padding=(3,3,12,12))
 tree = ttk.Treeview(content, columns=('Time'))
@@ -55,7 +83,7 @@ two = ttk.Checkbutton(content, text="Two", variable=twovar, onvalue=True)
 three = ttk.Checkbutton(content, text="Three", variable=threevar, \
     onvalue=True)
 ok = ttk.Button(content, text="Okay", command=append_tree)
-cancel = ttk.Button(content, text="Cancel")
+cancel = ttk.Button(content, text="Cancel", command=save_tasklist)
 
 content.grid(column=0, row=0, sticky=(N, S, E, W))
 tree.grid(column=0, row=0, columnspan=3, rowspan=2, sticky=(N, S, E, W))
@@ -77,6 +105,6 @@ content.columnconfigure(4, weight=1)
 content.rowconfigure(1, weight=1)
 
 tree.bind('<<TreeviewSelect>>', \
-    lambda e: print(tree.get_children(tree.selection())))
+    lambda e: print(tree.item(tree.selection())))
 
 root.mainloop()

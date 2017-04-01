@@ -1,0 +1,2 @@
+['', ['eat'], ['drink', ['liquor', ['scotch'], ['tequila']], ['beer']], ['be merry']]
+[0, [1], [3, [2, [1], [1]], [1]], [3]]
