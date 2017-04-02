@@ -21,7 +21,15 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="cl_func.py" />
     <Compile Include="main.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="default.txt" />
+    <Content Include="__pycache__\cl_func.cpython-36.pyc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="__pycache__\" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
