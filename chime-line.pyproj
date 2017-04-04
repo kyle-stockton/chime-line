@@ -25,6 +25,7 @@
     <Compile Include="main.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Alarm01.wav" />
     <Content Include="default.txt" />
     <Content Include="__pycache__\cl_func.cpython-36.pyc" />
   </ItemGroup>
